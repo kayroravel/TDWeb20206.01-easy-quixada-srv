@@ -8,6 +8,13 @@ const router = express.Router();
 const uploadsDir = path.join(__dirname, "..", "..", "uploads");
 
 function salvarImagem(imagem) {
+
+  console.log("salvarImagem chamada");
+  console.log("Tipo da imagem:", typeof imagem);
+  console.log("Imagem recebida?", Boolean(imagem));
+  console.log("Comeca com data:image?", imagem?.startsWith?.("data:image/"));
+  console.log("uploadsDir:", uploadsDir);
+
   if (!imagem || typeof imagem !== "string") {
     return imagem || "";
   }
@@ -18,11 +25,14 @@ function salvarImagem(imagem) {
 
   const resultado = imagem.match(/^data:image\/([a-zA-Z0-9+.-]+);base64,(.+)$/);
 
+  console.log("Regex encontrou imagem?", Boolean(resultado));
+
   if (!resultado) {
     return "";
   }
 
   if (!fs.existsSync(uploadsDir)) {
+    console.log("Criando pasta uploads...");
     fs.mkdirSync(uploadsDir, { recursive: true });
   }
 
@@ -31,7 +41,12 @@ function salvarImagem(imagem) {
   const nomeArquivo = `estabelecimento-${Date.now()}-${Math.round(Math.random() * 1e9)}.${extensao}`;
   const caminhoArquivo = path.join(uploadsDir, nomeArquivo);
 
+   console.log("nomeArquivo:", nomeArquivo);
+  console.log("caminhoArquivo:", caminhoArquivo);
+
   fs.writeFileSync(caminhoArquivo, Buffer.from(conteudoBase64, "base64"));
+
+  console.log("Imagem salva com sucesso:", `/uploads/${nomeArquivo}`);
 
   return `/uploads/${nomeArquivo}`;
 }
