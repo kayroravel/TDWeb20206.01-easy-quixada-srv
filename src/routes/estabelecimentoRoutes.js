@@ -41,7 +41,7 @@ function salvarImagem(imagem) {
   const nomeArquivo = `estabelecimento-${Date.now()}-${Math.round(Math.random() * 1e9)}.${extensao}`;
   const caminhoArquivo = path.join(uploadsDir, nomeArquivo);
 
-   console.log("nomeArquivo:", nomeArquivo);
+  console.log("nomeArquivo:", nomeArquivo);
   console.log("caminhoArquivo:", caminhoArquivo);
 
   fs.writeFileSync(caminhoArquivo, Buffer.from(conteudoBase64, "base64"));
@@ -149,7 +149,12 @@ router.post("/", async (req, res) => {
 
     res.status(201).json(resultado.rows[0]);
   } catch (erro) {
-    res.status(500).json({ erro: erro.message });
+    console.error("Erro ao cadastrar estabelecimento:", erro);
+    console.error("Stack:", erro.stack);
+    res.status(500).json({
+      erro: erro.message,
+     stack: erro.stack,
+    });
   }
 });
 
